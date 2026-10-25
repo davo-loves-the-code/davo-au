@@ -8,9 +8,9 @@ A certificate is the public credential a browser validates. Its private key must
 
 ## Preferred path: managed static host
 
-A static host such as GitHub Pages, Netlify, or Vercel can provision and renew the certificate after the custom domain is configured and validated. Follow that provider's custom-domain sequence, then add exactly the records it provides to Porkbun DNS. Wait for DNS and certificate issuance, test both apex and `www` hostnames, and configure one canonical hostname with a permanent redirect.
+A static host such as GitHub Pages, Netlify, or Vercel can provision and renew the certificate after the custom domain is configured and validated. For GitHub Pages, keep Porkbun DNS authoritative, add the GitHub-provided apex A records (and optional IPv6 AAAA records) plus a `www` CNAME to `<username>.github.io`, wait for validation/certificate provisioning, and enable “Enforce HTTPS” in repository Pages settings. GitHub's certificate workflow requests a Let's Encrypt certificate and uploads it to its TLS edge. GitHub says HTTPS enforcement may take up to 24 hours to become available. See the exact records and verification steps in `01-hosting-options.md`.
 
-There is a provider compatibility issue: Cloudflare Pages custom apex domains require the domain to be a Cloudflare zone using Cloudflare nameservers. That would move authoritative DNS away from Porkbun. If Porkbun DNS must remain authoritative, either select a host that supports external DNS for the apex, or host `www.davo.au` on the provider and set up root forwarding at a compatible service. Do not assume CNAME at the DNS apex is supported by all DNS providers.
+There is a provider compatibility issue: Cloudflare Pages custom apex domains require the domain to be a Cloudflare zone using Cloudflare nameservers. That would move authoritative DNS away from Porkbun. GitHub Pages supports an apex domain with A records while leaving DNS at Porkbun. Do not assume CNAME at the DNS apex is supported by all DNS providers.
 
 ## Self-hosted path: Caddy or Nginx + ACME
 
@@ -51,4 +51,6 @@ For this small static site, select a managed host that provisions HTTPS and acce
 - Certbot instructions: https://certbot.eff.org/instructions
 - Cloudflare Pages custom domains: https://developers.cloudflare.com/pages/configuration/custom-domains/
 - Cloudflare proxy modes: https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/
+- GitHub Pages HTTPS: https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https
+- GitHub Pages custom domain DNS records: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
 - OWASP HTTP Strict Transport Security Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html

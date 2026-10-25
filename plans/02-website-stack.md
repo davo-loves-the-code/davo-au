@@ -7,32 +7,34 @@ Launch a fast, low-risk personal site that initially says “Hello, this is Davo
 ## Recommended stack
 
 - **Content format:** Markdown for blog posts and simple HTML for the landing page.
-- **Static site generator:** Eleventy (11ty), using its stable release and built-in layouts/collections. It outputs ordinary HTML/CSS, so the deployed site has no client-side JavaScript requirement.
-- **Runtime/build:** Node.js LTS, pinned in `.nvmrc` or `.node-version`; commit `package-lock.json`; use `npm ci` in automated builds.
-- **Template language:** Nunjucks or Liquid, selected once and used consistently. Keep templates small and escape untrusted content by default.
+- **Static site generator:** Jekyll is the recommended default if GitHub Pages is selected. GitHub supports it directly and it handles Markdown pages and blog posts without a custom build pipeline. It uses Ruby and Liquid templates. If the owner prefers Eleventy (11ty), use a GitHub Actions workflow to build and deploy it; the resulting site is still static HTML/CSS.
+- **Runtime/build:** For Jekyll, use the version supported by GitHub's Pages Actions and pin the local Ruby/Bundler dependencies in a Gemfile and lockfile if building locally. For Eleventy, pin Node.js LTS in `.nvmrc` or `.node-version`, commit `package-lock.json`, and use `npm ci` in Actions.
+- **Template language:** Liquid for Jekyll or Nunjucks for Eleventy. Keep templates small and escape untrusted content by default.
 - **CSS:** plain CSS with a small design-token section; no CSS framework needed for this scale. Use system fonts initially.
 - **Source control/deploy:** Git repository, with a host's Git-based build/deploy integration or a documented local build-and-upload path. Hosting choice is in `01-hosting-options.md`.
 - **No JavaScript framework initially:** it adds a bundle, dependencies, browser-side attack surface, and maintenance without helping a plain intro/blog site.
 
-Eleventy is a mature, open-source static site generator. Other sound choices are Hugo (Go-based, very fast, fewer Node dependencies) or a hand-written HTML site. For this beginner-friendly plan, 11ty gives approachable Markdown content and flexible templates without turning a simple page into an app.
+Jekyll is the most direct fit with GitHub Pages because Pages has built-in support and GitHub recommends it. Eleventy remains a good modern option if its templating/build workflow is preferred, with the small extra step of setting up GitHub Actions. Other sound choices are Hugo (Go-based, very fast, few runtime dependencies) or hand-written HTML.
 
 ## Initial content and structure
 
 ```text
 src/
   _data/site.json
-  _includes/layouts/base.njk
+  _includes/layouts/base.html
   assets/site.css
   index.njk
   about.md
   links.njk
   blog/blog.11tydata.js
   blog/first-post.md
-.eleventy.js
-package.json
-package-lock.json
+_config.yml
+Gemfile
+Gemfile.lock
 README.md
 ```
+
+For the Jekyll path, use `_layouts/default.html`, `_includes/`, `_posts/YYYY-MM-DD-title.md`, `index.md`, and `about.md`; the tree above is illustrative rather than a required layout. Do not add both Jekyll and Eleventy toolchains unless there is a reason.
 
 The `index.njk` page can render a concise greeting, one or two sentences about Davo, and links to `about` and `links`. Store public profile URLs in one data file to make edits easy. Blog posts should have title, date, summary, and tags in front matter. Add a feed later if useful; RSS is a small static feature and requires no runtime.
 
@@ -51,15 +53,15 @@ The `index.njk` page can render a concise greeting, one or two sentences about D
 
 ## Suggested implementation sequence
 
-1. Install a supported Node.js LTS and Git.
-2. Create a new Eleventy starter with a pinned version; commit the generated lockfile.
-3. Add a minimal base layout with a charset, viewport, page title, description, semantic `main`, and footer.
-4. Add homepage greeting, an About page, and a Links page. Make outbound links explicit and easy to maintain.
-5. Add CSS for readable line length, responsive spacing, visible focus, and dark/light preference if desired.
-6. Add one Markdown blog post as a template for later writing.
-7. Build locally and inspect generated `_site/` output; check all links and ensure no accidental source or configuration files are published.
-8. Connect the repository to the chosen host; use the host's supported custom-domain and HTTPS workflow. DNS details remain in Porkbun as described in `01-hosting-options.md` and TLS is covered in `03-https-tls.md`.
-9. Configure redirects so one canonical hostname is used (`davo.au` or `www.davo.au`) and the other redirects to it.
+1. Install Git. If using Jekyll, install Ruby/Bundler and follow GitHub's supported Jekyll setup; if using Eleventy, install supported Node.js LTS.
+2. Create a dedicated public repository on GitHub Free. GitHub Pages is intended for public sites; keep private material and secrets out of the repository and generated output.
+3. Choose one build path: Jekyll with Pages' supported workflow, or Eleventy with a GitHub Actions Pages deployment workflow. Commit dependency lockfiles.
+4. Add a minimal base layout with charset, viewport, page title, description, semantic `main`, and footer.
+5. Add homepage greeting, an About page, and a Links page. Make outbound links explicit and easy to maintain.
+6. Add CSS for readable line length, responsive spacing, visible focus, and dark/light preference if desired.
+7. Add one Markdown blog post as a template for later writing.
+8. Build locally and inspect the generated output; check links and ensure no secrets or accidental private files are published.
+9. Connect Pages and GitHub Actions if needed. Configure custom domain and TLS using `01-hosting-options.md` and `03-https-tls.md`.
 10. Keep the repository README current with local build, deploy, content, and recovery steps.
 
 ## Growth path
@@ -80,6 +82,9 @@ The `index.njk` page can render a concise greeting, one or two sentences about D
 
 ## Source references
 
+- GitHub Pages Jekyll support: https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll
+- GitHub Pages custom workflows: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+- Jekyll documentation: https://jekyllrb.com/docs/
 - Eleventy documentation: https://www.11ty.dev/docs/
 - Node.js release schedule: https://github.com/nodejs/release
 - OWASP Cheat Sheet Series (Content Security Policy, XSS prevention, HTTP headers): https://cheatsheetseries.owasp.org/

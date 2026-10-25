@@ -35,6 +35,12 @@ Do not put the website VM and the mailbox on the same server. A website can be r
 
 Mail hostnames must be DNS-only if using a DNS provider with an HTTP proxy; ordinary SMTP/IMAP protocols should not resolve to an HTTP proxy address. With Porkbun DNS, enter the records the mail provider specifies.
 
+## Compatibility with a GitHub Pages website
+
+GitHub Pages and a mail service can use `davo.au` at the same time. DNS records route different protocols/services independently: apex A/AAAA records and `www` CNAME route web requests to Pages, while MX records route inbound email to the mail provider. SPF, DKIM, DMARC, and GitHub domain-verification TXT records can coexist in the same Porkbun DNS zone. A hosted mail provider does not require moving the website off GitHub Pages.
+
+If self-hosting mail later, the site can still remain on GitHub Pages. Set an MX record to a distinct host such as `mail.davo.au`, and create `mail` A/AAAA records for the mail server. Do not point the web site's apex/www records at the mail server, and do not proxy mail protocols through a web-only CDN. Self-hosted email has the operational/reputation risks above, independent of the static website host.
+
 ## Email forwarding option
 
 If the only requirement is to receive messages and have them arrive at an existing inbox, Porkbun's free forwarding may be enough. It does not provide a mailbox on its own and receiving-only forwarding is less useful if you need to reply as `daddy@davo.au`. Sending from a forwarded identity often requires separately configuring a provider that supports authenticated custom-domain sending; do not use a forged From header.
