@@ -17,11 +17,14 @@
   const thickness = 3;
   const widthOf = word => word.length * 7 + (word.length - 1) * gap;
   const width = Math.max(...words.map(widthOf)) + thickness;
-  const rows = Array.from({ length: words.length * (9 + thickness + 2) }, () => Array(width).fill(0));
+  const height = words.length * (9 + thickness + 2);
+  const front = Array.from({ length: height }, () => Array(width).fill(" "));
+  const sides = Array.from({ length: thickness }, () =>
+    Array.from({ length: height }, () => Array(width).fill(" "))
+  );
 
   words.forEach((word, wordIndex) => {
-    const faceWidth = widthOf(word);
-    const left = Math.floor((width - faceWidth) / 2);
+    const left = Math.floor((width - widthOf(word)) / 2);
     const top = wordIndex * (9 + thickness + 2);
 
     [...word].forEach((letter, letterIndex) => {
@@ -30,43 +33,26 @@
           if (pixel !== "1") return;
           const faceX = left + letterIndex * (7 + gap) + x;
           const faceY = top + y;
+          front[faceY][faceX] = "$";
 
-          for (let depth = thickness; depth > 0; depth -= 1) {
-            const sideX = faceX + depth;
-            const sideY = faceY + depth;
-            rows[sideY][sideX] = Math.max(rows[sideY][sideX], depth);
+          for (let depth = 1; depth <= thickness; depth += 1) {
+            sides[depth - 1][faceY + depth][faceX + depth] = "$";
           }
-          rows[faceY][faceX] = thickness + 1;
         });
       });
     });
   });
 
-  function renderRow(cells) {
-    let html = "";
-    let currentType = -1;
-    let run = "";
-
-    const flush = () => {
-      if (!run) return;
-      if (currentType === 0) html += run;
-      else if (currentType === thickness + 1) html += `<span class="dollar-face">${run}</span>`;
-      else html += `<span class="dollar-side dollar-side-${currentType}">${run}</span>`;
-      run = "";
-    };
-
-    for (let column = 0; column < cells.length; column += 1) {
-      const type = cells[column];
-      const character = type === 0 ? " " : "$";
-      if (type !== currentType) {
-        flush();
-        currentType = type;
-      }
-      run += character;
-    }
-    flush();
-    return html.trimEnd();
+  function preLayer(className, rows) {
+    return `<pre class="dollar-layer ${className}">${rows.map(row => row.join("")).join("\n")}</pre>`;
   }
 
-  art.innerHTML = rows.map(renderRow).join("\n");
+  const sizing = Array.from({ length: height }, () => Array(width).fill("$")).map(row => row.join("")).join("\n");
+  const depthLayers = sides
+    .map((rows, index) => ({ depth: index + 1, rows }))
+    .reverse()
+    .map(({ depth, rows }) => preLayer(`dollar-side-${depth}`, rows))
+    .join("");
+
+  art.innerHTML = `<pre class="dollar-layer dollar-sizing">${sizing}</pre>${depthLayers}${preLayer("dollar-face", front)}`;
 })();

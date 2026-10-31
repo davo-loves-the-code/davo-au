@@ -3,50 +3,68 @@
   width: min(100%, 54rem);
   margin-inline: auto;
   padding: 0.5rem 0;
-  perspective: 62rem;
 }
 
 .big-daddy-art {
+  position: relative;
   justify-self: center;
+  width: max-content;
   max-width: 100%;
   margin: 0;
-  overflow: hidden;
-  color: #b9f27c;
   font-family: "Courier New", Courier, monospace;
   font-size: clamp(0.72rem, 1.5vw, 1rem);
   font-weight: 700;
   line-height: 0.82;
   white-space: pre;
-  transform-style: preserve-3d;
-  transform-origin: center;
-  animation: dollar-marquee-turn 32s linear infinite;
   filter: drop-shadow(0 0 0.65rem rgb(185 242 124 / 16%));
 }
 
+.dollar-layer {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  line-height: inherit;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.dollar-sizing {
+  position: static;
+  visibility: hidden;
+}
+
+.dollar-side-1 { z-index: 1; color: #9d7ae0; }
+.dollar-side-2 { z-index: 2; color: #7252b8; }
+.dollar-side-3 { z-index: 3; color: #4b377f; }
+
 .dollar-face {
-  color: #d7ff9c;
+  z-index: 4;
+  color: transparent;
+  background: linear-gradient(
+    105deg,
+    #b9f27c 0%,
+    #d7ff9c 37%,
+    #fff9cd 49%,
+    #fff9cd 53%,
+    #d7ff9c 65%,
+    #b9f27c 100%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: dollar-face-sheen 7s ease-in-out infinite;
 }
 
-.dollar-side-1 {
-  color: #9d7ae0;
-}
-
-.dollar-side-2 {
-  color: #7252b8;
-}
-
-.dollar-side-3 {
-  color: #4b377f;
-}
-
-@keyframes dollar-marquee-turn {
-  from { transform: rotateY(0deg) rotateX(5deg); }
-  to { transform: rotateY(360deg) rotateX(5deg); }
+@keyframes dollar-face-sheen {
+  0%, 12% { background-position: 100% 0; }
+  78%, 100% { background-position: 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .big-daddy-art {
+  .dollar-face {
     animation: none;
-    transform: rotateY(-12deg) rotateX(5deg);
+    background-position: 50% 0;
   }
 }
