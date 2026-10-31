@@ -1,0 +1,44 @@
+.big-daddy-stage {
+  display: grid;
+  width: min(100%, 44rem);
+  margin-inline: auto;
+  padding: clamp(1rem, 5vw, 2rem) 0;
+  perspective: 42rem;
+}
+
+.big-daddy-art {
+  justify-self: center;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  color: #b6ff7a;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(0.46rem, 1.8vw, 0.82rem);
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: center;
+  white-space: pre;
+  text-shadow:
+    1px 0 #ff72c6,
+    2px 0 #d442aa,
+    3px 0 #8e3bb2,
+    4px 0 #4f3d96;
+  transform-style: preserve-3d;
+  animation: big-daddy-rock 6s ease-in-out infinite alternate;
+}
+
+.big-daddy-stage:hover .big-daddy-art {
+  animation-play-state: paused;
+}
+
+@keyframes big-daddy-rock {
+  from { transform: rotateY(-12deg) rotateX(3deg); }
+  to { transform: rotateY(12deg) rotateX(-3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .big-daddy-art {
+    animation: none;
+    transform: none;
+  }
+}
