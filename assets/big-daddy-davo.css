@@ -1,6 +1,6 @@
 .big-daddy-stage {
   display: grid;
-  width: min(100%, 44rem);
+  width: min(100%, 50rem);
   margin-inline: auto;
   padding: clamp(1rem, 5vw, 2rem) 0;
   perspective: 42rem;
@@ -13,7 +13,7 @@
   overflow-x: auto;
   color: #b6ff7a;
   font-family: "Courier New", Courier, monospace;
-  font-size: clamp(0.46rem, 1.8vw, 0.82rem);
+  font-size: clamp(1.05rem, 2.9vw, 2.3rem);
   font-weight: 700;
   line-height: 1.55;
   text-align: center;
