@@ -3,6 +3,7 @@
   width: min(100%, 54rem);
   margin-inline: auto;
   padding: 0.5rem 0;
+  perspective: 62rem;
 }
 
 .big-daddy-art {
@@ -12,8 +13,40 @@
   overflow: hidden;
   color: #b9f27c;
   font-family: "Courier New", Courier, monospace;
-  font-size: clamp(0.78rem, 1vw, 0.9rem);
+  font-size: clamp(0.72rem, 1.5vw, 1rem);
   font-weight: 700;
   line-height: 0.82;
   white-space: pre;
+  transform-style: preserve-3d;
+  transform-origin: center;
+  animation: dollar-marquee-turn 32s linear infinite;
+  filter: drop-shadow(0 0 0.65rem rgb(185 242 124 / 16%));
+}
+
+.dollar-face {
+  color: #d7ff9c;
+}
+
+.dollar-side-1 {
+  color: #9d7ae0;
+}
+
+.dollar-side-2 {
+  color: #7252b8;
+}
+
+.dollar-side-3 {
+  color: #4b377f;
+}
+
+@keyframes dollar-marquee-turn {
+  from { transform: rotateY(0deg) rotateX(5deg); }
+  to { transform: rotateY(360deg) rotateX(5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .big-daddy-art {
+    animation: none;
+    transform: rotateY(-12deg) rotateX(5deg);
+  }
 }
